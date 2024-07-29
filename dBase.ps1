@@ -1,5 +1,6 @@
 $Log_MaskableKeys = @(
-    'password'
+    'password',
+	'connection_string'
 )
 
 
@@ -38,6 +39,8 @@ function Idm-SystemInfo {
 
     if ($TestConnection) {
         Open-dBaseConnection $ConnectionParams
+		[void]$Global:dBaseConnection.getSchema("Tables")
+		Close-dBaseConnection
     }
 
     if ($Configuration) {
@@ -136,6 +139,7 @@ function Idm-Dispatcher {
         else {
             # Purposely no-operation.
         }
+
     }
     else {
 
@@ -334,7 +338,7 @@ function Idm-Dispatcher {
         }
 
     }
-
+	Close-dBaseConnection
     Log info "Done"
 }
 
@@ -387,7 +391,6 @@ function Open-dBaseConnection {
     $connection_params = ConvertFrom-Json2 $ConnectionParams
 
     $connection_string =  "CollatingSequence=ASCII;DBQ=$($connection_params.path);DefaultDir=$($connection_params.path);Deleted=0;Driver={Microsoft Access dBASE Driver (*.dbf, *.ndx, *.mdx)};DriverId=533;FIL=dBase 5.0;FILEDSN=$($connection_params.file_dsn);MaxBufferSize=2048;MaxScanRows=8;PageTimeout=5;SafeTransactions=0;Statistics=0;Threads=3;UID=admin111;UserCommitSync=Yes;"
-    LOG info $connection_string
 
     if ($Global:dBaseConnection -and $connection_string -ne $Global:dBaseConnectionString) {
         Log info "dBaseConnection connection parameters changed"
@@ -403,7 +406,7 @@ function Open-dBaseConnection {
         Log debug "Reusing dBaseConnection"
     }
     else {
-        Log info "Opening dBaseConnection '$connection_string'"
+        Log info "Opening dBaseConnection"
 
         try {
             $connection = (new-object System.Data.Odbc.OdbcConnection);
@@ -417,7 +420,7 @@ function Open-dBaseConnection {
         }
         catch {
             Log warn "Failed: $_"
-            #Write-Error $_
+            Write-Error $_
         }
 
         Log info "Done"
@@ -428,9 +431,7 @@ function Get-SqlCommand-SelectColumnsInfo {
     param (
         [string] $Table
     )
-    Log info "Get Columns [$($Table)]"
     $Command = "SELECT TOP 1 * FROM $($Table)"
-    log debug $Command
     $sql_command = New-Object System.Data.Odbc.OdbcCommand($Command, $Global:dBaseConnection)
     $reader = $sql_command.ExecuteReader()
     $reader.GetSchemaTable();
