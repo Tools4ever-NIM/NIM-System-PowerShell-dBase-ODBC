@@ -34,6 +34,20 @@ function Idm-SystemInfo {
                 label = 'File DSN Path'
                 value = ''
             }
+			@{
+                name = 'nr_of_sessions'
+                type = 'textbox'
+                label = 'Max. number of simultaneous sessions'
+                description = ''
+                value = 1
+            }
+            @{
+                name = 'sessions_idle_timeout'
+                type = 'textbox'
+                label = 'Session cleanup idle time (minutes)'
+                description = ''
+                value = 1
+            }
         )
     }
 
