@@ -18,7 +18,7 @@ function Idm-SystemInfo {
         [string] $ConnectionParams
     )
 
-    Log info "-Connection=$Connection -TestConnection=$TestConnection -Configuration=$Configuration -ConnectionParams='$ConnectionParams'"
+    Log verbose "-Connection=$Connection -TestConnection=$TestConnection -Configuration=$Configuration -ConnectionParams='$ConnectionParams'"
     
     if ($Connection) {
         @(
@@ -61,7 +61,7 @@ function Idm-SystemInfo {
         @()
     }
 
-    Log info "Done"
+    Log verbose "Done"
 }
 
 
@@ -88,7 +88,7 @@ function Idm-Dispatcher {
         [string] $FunctionParams
     )
 
-    Log info "-Class='$Class' -Operation='$Operation' -GetMeta=$GetMeta -SystemParams='$SystemParams' -FunctionParams='$FunctionParams'"
+    Log verbose "-Class='$Class' -Operation='$Operation' -GetMeta=$GetMeta -SystemParams='$SystemParams' -FunctionParams='$FunctionParams'"
 
     if ($Class -eq '') {
 
@@ -353,7 +353,7 @@ function Idm-Dispatcher {
 
     }
 	Close-dBaseConnection
-    Log info "Done"
+    Log verbose "Done"
 }
 
 
@@ -407,7 +407,7 @@ function Open-dBaseConnection {
     $connection_string =  "CollatingSequence=ASCII;DBQ=$($connection_params.path);DefaultDir=$($connection_params.path);Deleted=0;Driver={Microsoft Access dBASE Driver (*.dbf, *.ndx, *.mdx)};DriverId=533;FIL=dBase 5.0;FILEDSN=$($connection_params.file_dsn);MaxBufferSize=2048;MaxScanRows=8;PageTimeout=5;SafeTransactions=0;Statistics=0;Threads=3;UID=admin111;UserCommitSync=Yes;"
 
     if ($Global:dBaseConnection -and $connection_string -ne $Global:dBaseConnectionString) {
-        Log info "dBaseConnection connection parameters changed"
+        Log verbose "dBaseConnection connection parameters changed"
         Close-dBaseConnection
     }
 
@@ -420,7 +420,7 @@ function Open-dBaseConnection {
         Log debug "Reusing dBaseConnection"
     }
     else {
-        Log info "Opening dBaseConnection"
+        Log verbose "Opening dBaseConnection"
 
         try {
             $connection = (new-object System.Data.Odbc.OdbcConnection);
@@ -437,7 +437,7 @@ function Open-dBaseConnection {
             Write-Error $_
         }
 
-        Log info "Done"
+        Log verbose "Done"
     }
 }
 
@@ -453,7 +453,7 @@ function Get-SqlCommand-SelectColumnsInfo {
 
 function Close-dBaseConnection {
     if ($Global:dBaseConnection) {
-        Log info "Closing dBaseConnection"
+        Log verbose "Closing dBaseConnection"
 
         try {
             $Global:dBaseConnection.Close()
@@ -463,6 +463,6 @@ function Close-dBaseConnection {
             # Purposely ignoring errors
         }
 
-        Log info "Done"
+        Log verbose "Done"
     }
 }
