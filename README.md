@@ -1,5 +1,7 @@
 # dBase ODBC
 
+Read the [dBase ODBC integration documentation](https://docs.nimsuite.com/en/integrations/dbase-odbc) for connector details and related guides.
+
 <img src="https://github.com/Tools4ever-NIM/NIM-System-PowerShell-dBase-ODBC/assets/24281600/399dda17-c890-46f5-9301-14650bc9cfee" width="256px" />
 
 
